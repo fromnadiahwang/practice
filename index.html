@@ -531,11 +531,31 @@
         </div>
       </div>
 
+      <div class="card span-12">
+        <h2>Comments</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+            this.page.url = window.location.href;  
+            this.page.identifier = window.location.pathname; 
+            };
+            (function() { 
+            var d = document, s = d.createElement('script');
+            s.src = 'https://practice-ru4dzqt4wk.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+
     </section>
 
     <div class="footer">
       Psychological Dashboard · Self-reflection concept prototype
     </div>
+
+    <script id="dsq-count-scr" src="//practice-ru4dzqt4wk.disqus.com/count.js" async></script>
 
   </main>
 
