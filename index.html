@@ -4,8 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Psychological Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 
   <style>
+    :root {
+      --bg-color: #f6f1ea;
+      --text-color: #241f1b;
+      --card-bg: #fffaf4;
+      --card-border: #e8dac8;
+      --desc-color: #6d5f54;
+      --item-bg: #f2e7d8;
+      --tag-bg: #efe3d4;
+      --tag-text: #5d4a3d;
+      --bar-bg: #eadfce;
+    }
+
+    body.dark-theme {
+      --bg-color: #1a1614;
+      --text-color: #f4e8de;
+      --card-bg: #241d19;
+      --card-border: #3d342d;
+      --desc-color: #b7a99b;
+      --item-bg: #2d2621;
+      --tag-bg: rgba(255,255,255,0.1);
+      --tag-text: #ffe7d2;
+      --bar-bg: #3d342d;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -14,9 +39,10 @@
     }
 
     body {
-      background: #f6f1ea;
-      color: #241f1b;
+      background: var(--bg-color);
+      color: var(--text-color);
       padding: 28px;
+      transition: background 0.3s, color 0.3s;
     }
 
     .container {
@@ -63,8 +89,8 @@
     }
 
     .card {
-      background: #fffaf4;
-      border: 1px solid #e8dac8;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 28px;
       padding: 28px;
       box-shadow: 0 14px 42px rgba(80, 55, 34, 0.08);
@@ -97,7 +123,7 @@
     .bar {
       width: 100%;
       height: 12px;
-      background: #eadfce;
+      background: var(--bar-bg);
       border-radius: 999px;
       overflow: hidden;
       margin: 16px 0 18px;
@@ -112,7 +138,7 @@
     .desc {
       font-size: 14px;
       line-height: 1.65;
-      color: #6d5f54;
+      color: var(--desc-color);
     }
 
     .big-insight {
@@ -140,8 +166,8 @@
     }
 
     .tag {
-      background: #efe3d4;
-      color: #5d4a3d;
+      background: var(--tag-bg);
+      color: var(--tag-text);
       border-radius: 999px;
       padding: 9px 13px;
       font-size: 13px;
@@ -160,17 +186,17 @@
     }
 
     .item {
-      background: #f2e7d8;
+      background: var(--item-bg);
       border-radius: 20px;
       padding: 18px;
       font-size: 14px;
       line-height: 1.6;
-      color: #66574b;
+      color: var(--desc-color);
     }
 
     .item strong {
       display: block;
-      color: #2b2520;
+      color: var(--text-color);
       margin-bottom: 5px;
       font-size: 15px;
     }
@@ -183,10 +209,85 @@
     }
 
     .rec {
-      background: #f2e7d8;
+      background: var(--item-bg);
       border-radius: 24px;
       padding: 22px;
       min-height: 170px;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 10px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      color: var(--text-color);
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Whiteboard Styles */
+    #whiteboard-canvas {
+      width: 100%;
+      height: 400px;
+      background: white;
+      border-radius: 20px;
+      cursor: crosshair;
+      touch-action: none;
+      border: 1px solid var(--card-border);
+    }
+
+    body.dark-theme #whiteboard-canvas {
+      background: #f6f1ea;
+    }
+
+    .whiteboard-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--item-bg);
+    }
+
+    .btn.active {
+      background: #8c6a5a;
+      color: white;
+    }
+
+    input[type="color"] {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 0;
+      overflow: hidden;
     }
 
     .emoji {
@@ -201,7 +302,7 @@
 
     .rec p {
       font-size: 14px;
-      color: #6d5f54;
+      color: var(--desc-color);
       line-height: 1.6;
     }
 
@@ -237,6 +338,8 @@
 </head>
 
 <body>
+  <button class="theme-toggle" id="theme-toggle">🌙 Dark Mode</button>
+  
   <main class="container">
 
     <section class="hero">
@@ -363,6 +466,23 @@
       </div>
 
       <div class="card span-12">
+        <h2>Whiteboard</h2>
+        <p class="desc" style="margin-bottom: 15px;">Express your thoughts freely. Sketch, doodle, or note down your mental state.</p>
+        <canvas id="whiteboard-canvas"></canvas>
+        <div class="whiteboard-controls">
+          <button class="btn" id="clear-btn">Clear Canvas</button>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="color-picker" style="font-size: 14px; font-weight: 600;">Color:</label>
+            <input type="color" id="color-picker" value="#8c6a5a">
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-grow: 1;">
+            <label for="size-slider" style="font-size: 14px; font-weight: 600;">Size:</label>
+            <input type="range" id="size-slider" min="1" max="20" value="5" style="flex-grow: 1;">
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-12">
         <h2>Recommended Actions</h2>
 
         <div class="recommendations">
@@ -402,5 +522,7 @@
     </div>
 
   </main>
+
+  <script src="main.js"></script>
 </body>
 </html>
